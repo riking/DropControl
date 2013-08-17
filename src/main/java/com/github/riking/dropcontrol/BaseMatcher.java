@@ -12,6 +12,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.github.riking.dropcontrol.matcher.AmountMatcher;
 import com.github.riking.dropcontrol.matcher.ItemMatcher;
 import com.github.riking.dropcontrol.matcher.LoreLineMatcher;
 import com.github.riking.dropcontrol.matcher.PermissionExclusionMatcher;
@@ -47,6 +48,9 @@ public class BaseMatcher implements ConfigurationSerializable {
         }
         if (data.containsKey("exempt-permission")) {
             matchers.add(new PermissionExclusionMatcher((String) data.get("exempt-permission")));
+        }
+        if (data.containsKey("amount")) {
+            matchers.add(new AmountMatcher((String) data.get("amount")));
         }
     }
 
