@@ -57,8 +57,11 @@ public final class ItemStringInterpreter {
         materialData.put(WoodenStep.class, TreeSpecies.class);
         materialData.put(Wool.class, DyeColor.class);
 
-        workarounds.put(Material.SMOOTH_BRICK, new TexturedMaterialInterpreter(new SmoothBrick()));
         workarounds.put(Material.MONSTER_EGGS, new TexturedMaterialInterpreter(new MonsterEggs()));
+
+        // Workaround: The texture names are pretty damn dumb here
+        //workarounds.put(Material.SMOOTH_BRICK, new TexturedMaterialInterpreter(new SmoothBrick()));
+        workarounds.put(Material.SMOOTH_BRICK, new EnumOrdinalMaterialInterpreter(TEMP_StoneBrickType.values()));
 
         // Workaround: Step does not have the new materials in its texture list
         //workarounds.put(Material.STEP, new TexturedMaterialInterpreter(new Step()));
@@ -226,4 +229,10 @@ enum TEMP_StepType {
     ALTERNATE_SMOOTH_BRICK,
     ALTERNATE_NETHER_BRICK,
     SEAMLESS_QUARTZ;
+}
+enum TEMP_StoneBrickType {
+    NORMAL,
+    CRACKED,
+    MOSSY,
+    CIRCLE;
 }
