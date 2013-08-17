@@ -1,3 +1,20 @@
+/*
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Please note that this licensing is only for this file. The rest of the
+ * plugin is licensed under the GNU General Public License.
+ */
 package com.github.riking.dropcontrol;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,9 +36,7 @@ import org.bukkit.material.LongGrass;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.MonsterEggs;
 import org.bukkit.material.Sandstone;
-import org.bukkit.material.SmoothBrick;
 import org.bukkit.material.SpawnEgg;
-import org.bukkit.material.Step;
 import org.bukkit.material.TexturedMaterial;
 import org.bukkit.material.Tree;
 import org.bukkit.material.WoodenStep;
@@ -34,7 +49,10 @@ public final class ItemStringInterpreter {
     private static Map<Class<? extends MaterialData>, Class<? extends Enum>> materialData = new HashMap<Class<? extends MaterialData>, Class<? extends Enum>>();
     private static Map<Material, StringInterpreter> workarounds = new HashMap<Material, StringInterpreter>();
 
-    private ItemStringInterpreter() {}
+    private ItemStringInterpreter() {
+        @SuppressWarnings("unused")
+        String foo = "This file is licensed under the GNU LGPL, version 3 or any later version.";
+    }
 
     static {
         // Block-only data classes are commented out, as we don't actually need them.
@@ -147,12 +165,14 @@ public final class ItemStringInterpreter {
             m = Material.matchMaterial(s);
         } catch (Exception e) {
         }
-        if (m != null) return m;
+        if (m != null)
+            return m;
         try {
             m = Material.getMaterial(Integer.parseInt(s));
         } catch (Exception e) {
         }
-        if (m != null) return m;
+        if (m != null)
+            return m;
         return null;
     }
 }
@@ -161,32 +181,35 @@ interface StringInterpreter {
     /**
      * Interpret a data string into a Byte suitable for MaterialData.
      * <p>
-     * The provided string must first be made all uppercase before
-     * calling.
+     * The provided string must first be made all uppercase before calling.
      *
      * @param s provided string
      * @return byte of data
      */
     public byte interpret(String s);
 }
+
 class TexturedMaterialInterpreter implements StringInterpreter {
     private TexturedMaterial referenceInstance;
 
     public TexturedMaterialInterpreter(TexturedMaterial instance) {
         referenceInstance = instance;
     }
+
     @Override
     public byte interpret(String s) {
         referenceInstance.setMaterial(Material.valueOf(s));
         return referenceInstance.getData();
     }
 }
+
 class EnumOrdinalMaterialInterpreter implements StringInterpreter {
     private Enum<?>[] values;
 
     public EnumOrdinalMaterialInterpreter(Enum<?>[] values) {
         this.values = values;
     }
+
     @Override
     public byte interpret(String s) {
         for (Enum<?> e : values) {
@@ -197,20 +220,24 @@ class EnumOrdinalMaterialInterpreter implements StringInterpreter {
         return 0;
     }
 }
+
 enum TEMP_WallType {
     COBBLESTONE,
     MOSSY_COBBLESTONE;
 }
+
 enum TEMP_AnvilDamage {
     UNDAMAGED,
     SLIGHTLY_DAMAGED,
     VERY_DAMAGED;
 }
+
 enum TEMP_QuartzType {
     NORMAL,
     CHISELED,
     PILLAR;
 }
+
 // From Step.class - missing new values
 enum TEMP_StepType {
     STONE,
@@ -230,6 +257,8 @@ enum TEMP_StepType {
     ALTERNATE_NETHER_BRICK,
     SEAMLESS_QUARTZ;
 }
+
+// From SmoothBrick.class - dumb names
 enum TEMP_StoneBrickType {
     NORMAL,
     CRACKED,
