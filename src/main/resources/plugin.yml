@@ -1,0 +1,16 @@
+name: DropControl
+main: com.github.riking.dropcontrol.DropControlMain
+version: 1.0
+
+author: Riking
+# The license of this plugin is GPL v3, or at your option, any later version.
+# The file "ItemStringInterpreter.java" is licensed separately under the LGPL v3, or at your option, any later version.
+
+website: http://dev.bukkit.org/bukkit-plugins/dropcontrol/
+description: >
+    Allows server owners to control players' dropping
+    of items with a variety of flexible matching rules.
+
+depend: []
+softdepend: []
+loadbefore: []

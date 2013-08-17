@@ -14,6 +14,7 @@ public class DropControlMain extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
         getServer().getPluginManager().registerEvents(new DropListener(this), this);
         loadConfiguration();
     }
