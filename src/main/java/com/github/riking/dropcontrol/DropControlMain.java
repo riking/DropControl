@@ -37,9 +37,13 @@ public class DropControlMain extends JavaPlugin {
 
         List<Map<?, ?>> global = root.getMapList("global");
         for (Map<?, ?> map : global) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> yamlmap = (Map<String, Object>) map;
-            globalMatchers.add(new BaseMatcher(yamlmap));
+            try {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> yamlmap = (Map<String, Object>) map;
+                globalMatchers.add(new BaseMatcher(yamlmap));
+            } catch (Exception e) {
+                new IllegalArgumentException("Malformed configuration entry", e).printStackTrace();
+            }
         }
 
         ConfigurationSection perworld = root.getConfigurationSection("worlds");
@@ -47,9 +51,13 @@ public class DropControlMain extends JavaPlugin {
             List<BaseMatcher> list = new ArrayList<BaseMatcher>();
             List<Map<?, ?>> rules = perworld.getMapList(world);
             for (Map<?, ?> map : rules) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> yamlmap = (Map<String, Object>) map;
-                list.add(new BaseMatcher(yamlmap));
+                try {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> yamlmap = (Map<String, Object>) map;
+                    list.add(new BaseMatcher(yamlmap));
+                } catch (Exception e) {
+                    new IllegalArgumentException("Malformed configuration entry", e).printStackTrace();
+                }
             }
             worldMatchers.put(world, list);
         }
