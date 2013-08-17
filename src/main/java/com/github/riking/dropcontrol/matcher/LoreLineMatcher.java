@@ -1,10 +1,10 @@
 package com.github.riking.dropcontrol.matcher;
 
 import java.util.List;
-import java.util.Map;
 
 import lombok.AllArgsConstructor;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -17,7 +17,7 @@ public class LoreLineMatcher implements ItemMatcher {
     }
 
     @Override
-    public boolean matches(ItemStack item) {
+    public boolean matches(ItemStack item, Player player) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return false;
         List<String> lore = meta.getLore();
@@ -27,5 +27,10 @@ public class LoreLineMatcher implements ItemMatcher {
             }
         }
         return false;
+    }
+
+    @Override
+    public String getSerializationKey() {
+        return "loreline";
     }
 }

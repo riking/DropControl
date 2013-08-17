@@ -1,5 +1,7 @@
 package com.github.riking.dropcontrol;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
@@ -28,9 +30,11 @@ import org.bukkit.material.Wool;
 import com.github.riking.dropcontrol.matcher.BasicItemMatcher;
 
 @SuppressWarnings("rawtypes")
-public class ItemStringInterpreter {
-    private static Map<Class<? extends MaterialData>, Class<? extends Enum>> materialData;
-    private static Map<Material, StringInterpreter> workarounds;
+public final class ItemStringInterpreter {
+    private static Map<Class<? extends MaterialData>, Class<? extends Enum>> materialData = new HashMap<Class<? extends MaterialData>, Class<? extends Enum>>();
+    private static Map<Material, StringInterpreter> workarounds = new HashMap<Material, StringInterpreter>();
+
+    private ItemStringInterpreter() {}
 
     static {
         // Block-only data classes are commented out, as we don't actually need them.
@@ -53,9 +57,14 @@ public class ItemStringInterpreter {
         materialData.put(WoodenStep.class, TreeSpecies.class);
         materialData.put(Wool.class, DyeColor.class);
 
-        workarounds.put(Material.STEP, new TexturedMaterialInterpreter(new Step()));
         workarounds.put(Material.SMOOTH_BRICK, new TexturedMaterialInterpreter(new SmoothBrick()));
         workarounds.put(Material.MONSTER_EGGS, new TexturedMaterialInterpreter(new MonsterEggs()));
+
+        // Workaround: Step does not have the new materials in its texture list
+        //workarounds.put(Material.STEP, new TexturedMaterialInterpreter(new Step()));
+        workarounds.put(Material.STEP, new EnumOrdinalMaterialInterpreter(TEMP_StepType.values()));
+        workarounds.put(Material.DOUBLE_STEP, new EnumOrdinalMaterialInterpreter(TEMP_StepType.values()));
+
         // Workaround: Dye.class does not accept DyeColor in constructor
         workarounds.put(Material.INK_SACK, new StringInterpreter() {
             @Override
@@ -83,6 +92,10 @@ public class ItemStringInterpreter {
     }
 
     public static BasicItemMatcher valueOf(String itemString) throws IllegalArgumentException {
+        itemString = itemString.toUpperCase();
+        if (itemString.equals("ANY")) {
+            return new BasicItemMatcher(null, null, null);
+        }
         String[] split = itemString.split(":");
         Validate.isTrue(split.length <= 2, "Unable to parse item string - too many colons (maximum 1). Please correct the format and reload the config. Input: " + itemString);
         Material mat = getMaterial(split[0]);
@@ -90,7 +103,7 @@ public class ItemStringInterpreter {
         if (split.length == 1) {
             return new BasicItemMatcher(mat, null, null);
         }
-        String dataString = split[1].toUpperCase();
+        String dataString = split[1];
         short data;
         try {
             data = Short.parseShort(dataString);
@@ -103,8 +116,8 @@ public class ItemStringInterpreter {
             Enum enumValue;
             try {
                 enumValue = (Enum) enumClass.getMethod("valueOf", String.class).invoke(null, dataString);
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Unable to parse item string - " + dataString + " is not a valid member of " + enumClass.getSimpleName());
+            } catch (InvocationTargetException e) {
+                throw new IllegalArgumentException("Unable to parse item string - " + dataString + " is not a valid member of " + enumClass.getSimpleName(), e.getCause());
             } catch (Exception rethrow) {
                 throw new RuntimeException("Unexpected exception when parsing item string", rethrow);
             }
@@ -194,4 +207,23 @@ enum TEMP_QuartzType {
     NORMAL,
     CHISELED,
     PILLAR;
+}
+// From Step.class - missing new values
+enum TEMP_StepType {
+    STONE,
+    SANDSTONE,
+    WOOD,
+    COBBLESTONE,
+    BRICK,
+    SMOOTH_BRICK,
+    NETHER_BRICK,
+    QUARTZ,
+    SEAMLESS_STONE,
+    SEAMLESS_SANDSTONE,
+    ALTERNATE_WOOD,
+    ALTERNATE_COBBLESTONE,
+    ALTERNATE_BRICK,
+    ALTERNATE_SMOOTH_BRICK,
+    ALTERNATE_NETHER_BRICK,
+    SEAMLESS_QUARTZ;
 }

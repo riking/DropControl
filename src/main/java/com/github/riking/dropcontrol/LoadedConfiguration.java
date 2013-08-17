@@ -2,29 +2,40 @@ package com.github.riking.dropcontrol;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.bukkit.World;
+import lombok.AllArgsConstructor;
+
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.github.riking.dropcontrol.matcher.BaseMatcher;
-
+@AllArgsConstructor
 public class LoadedConfiguration {
     private Action defaultAction;
     private List<BaseMatcher> globalMatchers;
     private Map<String, List<BaseMatcher>> worldMatchers;
 
-    public Action checkItem(World world, ItemStack item) {
-        return checkItem(world.getName(), item);
+    public Action checkItem(String world, ItemStack item, Player player) {
+        Action act;
+        act = tryCheck(worldMatchers.get(world), item, player);
+        if (act != null) return act;
+        act = tryCheck(globalMatchers, item, player);
+        if (act != null) return act;
+        return defaultAction;
     }
 
-    public Action checkItem(String world, ItemStack item) {
-
-    }
-
-    private Action tryCheck(List<BaseMatcher> matchers, ItemStack item) {
+    /**
+     * Returns null if no matching rule was found.
+     *
+     * @param matchers list of matching rules
+     * @param item item to check
+     * @return action if rule found, else null
+     */
+    private Action tryCheck(List<BaseMatcher> matchers, ItemStack item, Player player) {
         for (BaseMatcher match : matchers) {
-
+            if (match.appliesTo(item, player)) {
+                return match.getAction();
+            }
         }
+        return null;
     }
 }

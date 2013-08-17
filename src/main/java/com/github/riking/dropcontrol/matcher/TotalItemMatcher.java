@@ -1,5 +1,6 @@
 package com.github.riking.dropcontrol.matcher;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +15,12 @@ public class TotalItemMatcher implements ItemMatcher {
     }
 
     @Override
-    public boolean matches(ItemStack item2) {
+    public boolean matches(ItemStack item2, Player player) {
         return item.isSimilar(item2);
+    }
+
+    @Override
+    public String getSerializationKey() {
+        return "totalitem";
     }
 }
