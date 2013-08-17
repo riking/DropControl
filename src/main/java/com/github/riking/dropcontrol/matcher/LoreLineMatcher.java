@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,8 +22,9 @@ public class LoreLineMatcher implements ItemMatcher {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return false;
         List<String> lore = meta.getLore();
+        String trueLine = ChatColor.translateAlternateColorCodes('&', loreLine);
         for (String s : lore) {
-            if (loreLine.equals(s)) {
+            if (trueLine.equals(s)) {
                 return true;
             }
         }
