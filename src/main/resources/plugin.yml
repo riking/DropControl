@@ -1,6 +1,6 @@
 name: DropControl
 main: com.github.riking.dropcontrol.DropControlMain
-version: 1.0
+version: ${project.version}
 
 author: Riking
 # The license of this plugin is GPL v3, or at your option, any later version.
