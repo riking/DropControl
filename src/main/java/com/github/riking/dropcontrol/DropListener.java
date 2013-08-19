@@ -17,13 +17,14 @@ import org.bukkit.inventory.ItemStack;
 public class DropListener implements Listener {
     @NonNull private DropControlMain plugin;
 
+    @SuppressWarnings("unused")
     private static final ItemStack AIR = new ItemStack(Material.AIR);
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         Item item = event.getItemDrop();
-        if (item.isDead() || AIR.isSimilar(item.getItemStack())) {
+        if (item.isDead()) {
             // the item was already removed by another plugin
             return;
         }
@@ -33,11 +34,14 @@ public class DropListener implements Listener {
                 return;
             case BLOCK:
                 event.setCancelled(true);
+                // TODO should we send message?
                 player.sendMessage(ChatColor.YELLOW + "[DropControl] You are not allowed to drop that!");
                 break;
             case REMOVE:
-                item.setItemStack(new ItemStack(Material.AIR));
                 item.remove();
+                // XXX Causes NPE in NMS-land
+                // item.setItemStack(new ItemStack(Material.AIR));
+                // TODO should we send message?
                 // player.sendMessage(ChatColor.YELLOW + "[DropControl] You are not allowed to drop that!");
                 break;
         }
