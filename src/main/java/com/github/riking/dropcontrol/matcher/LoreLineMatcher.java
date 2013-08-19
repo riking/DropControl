@@ -22,6 +22,7 @@ public class LoreLineMatcher implements ItemMatcher {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return false;
         List<String> lore = meta.getLore();
+        if (lore == null) return false;
         String trueLine = ChatColor.translateAlternateColorCodes('&', loreLine);
         for (String s : lore) {
             if (trueLine.equals(s)) {

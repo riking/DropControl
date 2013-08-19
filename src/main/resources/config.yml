@@ -9,7 +9,7 @@ worlds:
     - action: ALLOW
   world: &RefWorld
     - item: DIRT
-      amount: >64
+      amount: ">64"
       action: BLOCK
   world_nether: *RefWorld
   world_the_end: *RefWorld
