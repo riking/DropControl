@@ -24,6 +24,18 @@ public class DropControlMain extends JavaPlugin {
 
     }
 
+    @Override
+    public void reloadConfig() {
+        super.reloadConfig();
+        loadConfiguration();
+    }
+
+    @Override
+    public void saveConfig() {
+        config.saveTo(getConfig());
+        super.saveConfig();
+    }
+
     public void loadConfiguration() {
         configLoaded = false;
         config = null;

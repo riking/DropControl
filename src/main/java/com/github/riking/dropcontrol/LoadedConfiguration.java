@@ -1,10 +1,12 @@
 package com.github.riking.dropcontrol;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -38,5 +40,40 @@ public class LoadedConfiguration {
             }
         }
         return null;
+    }
+
+    public ConfigurationSection saveTo(ConfigurationSection config) {
+        ConfigurationSection section;
+
+        config.set("default-action", defaultAction.toString());
+
+        section = getOrCreateSection(config, "messages");
+        section.set("ALLOW", messages.get(Action.ALLOW));
+        section.set("BLOCK", messages.get(Action.BLOCK));
+        section.set("REMOVE", messages.get(Action.REMOVE));
+
+        config.set("global", saveMatchers(globalMatchers));
+
+        section = getOrCreateSection(config, "worlds");
+        for (String world : worldMatchers.keySet()) {
+            section.set(world, saveMatchers(worldMatchers.get(world)));
+        }
+        return config;
+    }
+
+    private ConfigurationSection getOrCreateSection(ConfigurationSection base, String name) {
+        ConfigurationSection sec = base.getConfigurationSection(name);
+        if (sec == null) {
+            sec = base.createSection(name);
+        }
+        return sec;
+    }
+
+    private List<Map<?, ?>> saveMatchers(List<BaseMatcher> matchers) {
+        List<Map<?, ?>> maplist = new ArrayList<Map<?, ?>>(matchers.size());
+        for (BaseMatcher match : matchers) {
+            maplist.add(match.serialize());
+        }
+        return maplist;
     }
 }
