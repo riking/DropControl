@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.github.riking.dropcontrol.commands.DropcontrolCommand;
 
 public class DropControlMain extends JavaPlugin {
     public LoadedConfiguration config;
@@ -17,6 +20,7 @@ public class DropControlMain extends JavaPlugin {
         saveDefaultConfig();
         getServer().getPluginManager().registerEvents(new DropListener(this), this);
         loadConfiguration();
+        getCommand("dropcontrol").setExecutor(new DropcontrolCommand(this));
     }
 
     @Override

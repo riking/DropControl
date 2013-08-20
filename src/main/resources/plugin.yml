@@ -14,3 +14,40 @@ description: >
 depend: []
 softdepend: []
 loadbefore: []
+
+commands:
+    dropcontrol:
+        permission: dropcontrol.command
+        description: All commands for DropControl
+
+permissions:
+    dropcontrol.kit.admin:
+        description: Permissions to edit the DropControl configuration.
+        default: op
+        children:
+            dropcontrol.command: true
+            dropcontrol.command.help: true
+            dropcontrol.command.reload: true
+            dropcontrol.command.save: true
+            dropcontrol.command.add: true
+            dropcontrol.command.list: true
+            dropcontrol.command.remove: true
+            dropcontrol.command.default: true
+
+    dropcontrol.command:
+        default: true
+        description: Permission to see /dropcontrol
+    dropcontrol.command.help:
+        description: Permission to use /dropcontrol ?, displaying the help
+    dropcontrol.command.reload:
+        description: Permission to use /dropcontrol reload, reloading the config file
+    dropcontrol.command.reload:
+        description: Permission to use /dropcontrol save, saving the config file modified via other commands
+    dropcontrol.command.add:
+        description: Permission to use /dropcontrol add ["world="world] <action> <rulespec>, to add a new rule
+    dropcontrol.command.list:
+        description: Permission to use /dropcontrol list [world], to list all rules
+    dropcontrol.command.remove:
+        description: Permission to use /dropcontrol remove [world] <ruleid>, to remove a drop rule
+    dropcontrol.command.default:
+        description: Permission to use /dropcontrol default <action>, to set the default action
