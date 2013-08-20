@@ -3,7 +3,6 @@ package com.github.riking.dropcontrol;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -29,20 +28,20 @@ public class DropListener implements Listener {
             return;
         }
         Action action = plugin.config.checkItem(player.getWorld().getName(), item.getItemStack(), player);
+        String message = plugin.config.messages.get(action);
+        if (!message.isEmpty()) {
+            player.sendMessage(message);
+        }
         switch (action) {
             case ALLOW:
-                return;
+                break;
             case BLOCK:
                 event.setCancelled(true);
-                // TODO should we send message?
-                player.sendMessage(ChatColor.YELLOW + "[DropControl] You are not allowed to drop that!");
                 break;
             case REMOVE:
                 item.remove();
                 // XXX Causes NPE in NMS-land
                 // item.setItemStack(new ItemStack(Material.AIR));
-                // TODO should we send message?
-                // player.sendMessage(ChatColor.YELLOW + "[DropControl] You are not allowed to drop that!");
                 break;
         }
     }

@@ -1,6 +1,12 @@
 # Please see the plugin description for the rules on the format of this file.
 # All the entries in here are impossible and will never happen (except maybe Soulbound, but that's what it's for anyways), so the plugin won't do anything until you change this file.
 default-action: ALLOW
+
+messages:
+  ALLOW: ""
+  BLOCK: "&6[DropControl]&e You are not allowed to drop that!"
+  REMOVE: ""
+
 global:
   - loreline: "&6Soulbound"
     action: REMOVE

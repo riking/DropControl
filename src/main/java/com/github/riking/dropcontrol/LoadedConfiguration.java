@@ -13,6 +13,7 @@ public class LoadedConfiguration {
     private Action defaultAction;
     private List<BaseMatcher> globalMatchers;
     private Map<String, List<BaseMatcher>> worldMatchers;
+    public Map<Action, String> messages;
 
     public Action checkItem(String world, ItemStack item, Player player) {
         Action act;

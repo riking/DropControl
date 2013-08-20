@@ -31,11 +31,14 @@ public class DropControlMain extends JavaPlugin {
         Action defaultAction;
         List<BaseMatcher> globalMatchers = new ArrayList<BaseMatcher>();
         Map<String, List<BaseMatcher>> worldMatchers = new HashMap<String, List<BaseMatcher>>();
+        Map<Action, String> messages = new HashMap<Action, String>();
 
         ConfigurationSection root = getConfig();
 
+        // defaultAction
         defaultAction = Action.valueOf(root.getString("default-action"));
 
+        // globalMatchers
         List<Map<?, ?>> global = root.getMapList("global");
         for (Map<?, ?> map : global) {
             try {
@@ -47,6 +50,7 @@ public class DropControlMain extends JavaPlugin {
             }
         }
 
+        // worldMatchers
         ConfigurationSection perworld = root.getConfigurationSection("worlds");
         for (String world : perworld.getKeys(false)) {
             List<BaseMatcher> list = new ArrayList<BaseMatcher>();
@@ -63,6 +67,12 @@ public class DropControlMain extends JavaPlugin {
             worldMatchers.put(world, list);
         }
 
-        config = new LoadedConfiguration(defaultAction, globalMatchers, worldMatchers);
+        // messages
+        ConfigurationSection msgs = root.getConfigurationSection("messages");
+        messages.put(Action.ALLOW, ChatColor.translateAlternateColorCodes('&', msgs.getString("ALLOW")));
+        messages.put(Action.BLOCK, ChatColor.translateAlternateColorCodes('&', msgs.getString("BLOCK")));
+        messages.put(Action.REMOVE, ChatColor.translateAlternateColorCodes('&', msgs.getString("REMOVE")));
+
+        config = new LoadedConfiguration(defaultAction, globalMatchers, worldMatchers, messages);
     }
 }
